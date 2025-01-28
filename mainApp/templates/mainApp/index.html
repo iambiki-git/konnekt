@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+    <div class="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
+        <!-- Header -->
+        <h2 class="text-2xl font-bold text-gray-800 text-center">Login to Your Account</h2>
+        <p class="text-gray-500 text-sm text-center mt-2">Connect with your favorite social platform</p>
+
+        <!-- Social Media Login Buttons -->
+        <div class="mt-6 flex flex-col gap-4">
+            <button 
+                class="flex items-center justify-center bg-blue-600 text-white py-2 rounded-lg shadow hover:bg-blue-700 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.406.593 24 1.325 24h11.495v-9.294H9.72v-3.622h3.101V8.309c0-3.074 1.883-4.743 4.63-4.743 1.316 0 2.448.098 2.778.141v3.222h-1.908c-1.498 0-1.79.712-1.79 1.754v2.295h3.57l-.465 3.622h-3.105V24h6.08c.731 0 1.324-.593 1.324-1.325V1.325C24 .593 23.406 0 22.675 0z"/>
+                </svg>
+                Continue with Facebook
+            </button>
+
+            <button 
+                class="flex items-center justify-center bg-red-500 text-white py-2 rounded-lg shadow hover:bg-red-600 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21.35 11.1h-8.5V13.85h6.6a5.88 5.88 0 01-2.55 3.95h0a6.72 6.72 0 01-3.95 1.2c-3.94 0-6.89-3.16-6.89-7.05 0-.38.04-.74.09-1.1h0c.03-.15.05-.3.08-.44h0c.03-.14.06-.29.1-.43a6.74 6.74 0 013.14-4.63h0a7.2 7.2 0 014.75-1.09h0a6.93 6.93 0 014.58 1.79l3.1-3.14A11.17 11.17 0 0015.1.84a11.17 11.17 0 10-.23 21.98h0a11.39 11.39 0 007.68-2.88c3.3-3.14 5.1-7.81 4.8-13.21h-6V11.1z"/>
+                </svg>
+                Continue with Google
+            </button>
+        </div>
+
+        <!-- Separator -->
+        <div class="relative my-8">
+            <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white text-gray-500">Or login with your email</span>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <form action="#" method="POST">
+            <div class="flex flex-col gap-4">
+                <!-- Email Input -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+                    <input type="email" name="email" id="email" 
+                        class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" 
+                        placeholder="you@example.com" required>
+                </div>
+
+                <!-- Password Input -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" name="password" id="password" 
+                        class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" 
+                        placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <!-- Forgot Password -->
+            <div class="mt-4 text-right">
+                <a href="#" class="text-sm text-blue-500 hover:underline">Forgot your password?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                class="w-full bg-blue-600 text-white py-2 rounded-lg shadow mt-6 hover:bg-blue-700 transition">
+                Login
+            </button>
+        </form>
+
+        <!-- Register Link -->
+        <p class="text-sm text-center text-gray-500 mt-6">
+            Don't have an account? <a href="{% url 'signup' %}" class="text-blue-500 hover:underline">Sign up</a>
+        </p>
+    </div>
+</div>
+
+{% endblock %}
