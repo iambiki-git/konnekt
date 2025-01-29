@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <div class="max-w-6xl mx-auto px-4 py-6">
+        <!-- Profile Header -->
+        <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+            <div class="flex flex-col items-center">
+
+                <div class="relative">
+                    <!-- Profile Picture -->
+                    <img id="profilePic" src="{% if user.userprofile.profile_picture %}{{ user.userprofile.profile_picture.url }}{% else %}{% static 'mainApp/images/default.jpg' %}{% endif %}" 
+                         alt="Profile Picture" 
+                         class="w-32 h-32 object-cover rounded-full border-4 border-purple-600 cursor-pointer">
+                    
+                    <!-- Hidden File Input -->
+                    <input type="file" id="profilePicInput" class="hidden" accept="image/*">
+                    
+                    <!-- Options Menu -->
+                    <div id="profileOptions" class="absolute left-0 mt-2 bg-white shadow-lg rounded-lg w-40 hidden">
+                        <ul class="text-sm text-gray-700">
+                            <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" id="viewImage">View Profile Image</li>
+                            <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" id="uploadImage">Upload New Image</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Modal for Viewing Image -->
+                <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden">
+                    <div class="bg-white p-4 rounded-lg shadow-lg max-w-lg">
+                        <img id="modalImage" src="{% if user.userprofile.profile_picture %}{{ user.userprofile.profile_picture.url }}{% else %}{% static 'mainApp/images/default.jpg' %}{% endif %}" class="w-full rounded-lg">
+                        <button id="closeModal" class="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg w-full">Close</button>
+                    </div>
+                </div>
+
+                {% comment %} <img src="{% static 'mainApp/images/p_img.jpg' %}" alt="Profile Picture" class="w-32 h-32 rounded-full border-4 border-purple-600 cursor-pointer"> {% endcomment %}
+                <h1 class="text-2xl font-bold mt-4">{{ request.user.first_name }} {{ request.user.last_name }}</h1>
+                <p class="text-gray-500">{{ request.user.username }}</p>
+                <p class="mt-2 text-gray-700">Bio: A short description about the user goes here.</p>
+                <div class="mt-4 flex space-x-4">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Follow</button>
+                    <button class="bg-gray-300 px-4 py-2 rounded-lg">Message</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Stats -->
+        <div class="bg-white shadow-lg rounded-lg p-6 mt-6 flex justify-around text-center">
+            <div>
+                <h2 class="text-xl font-semibold">150</h2>
+                <p class="text-gray-500">Posts</p>
+            </div>
+            <div>
+                <h2 class="text-xl font-semibold">2.5K</h2>
+                <p class="text-gray-500">Followers</p>
+            </div>
+            <div>
+                <h2 class="text-xl font-semibold">300</h2>
+                <p class="text-gray-500">Following</p>
+            </div>
+        </div>
+
+        <!-- Add New Post -->
+        <div class="bg-white shadow-lg rounded-lg p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Add a New Post</h2>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="image" class="block w-full mb-4 border border-gray-300 rounded-lg p-2">
+                <textarea name="caption" class="block w-full mb-4 border border-gray-300 rounded-lg p-2" placeholder="Write a caption..."></textarea>
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg">Post</button>
+            </form>
+        </div>
+
+        <!-- User Posts Grid -->
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {% for post in posts %}
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                <img src="{{ post.image_url }}" alt="Post Image" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <p class="text-gray-700">{{ post.caption }}</p>
+                    <div class="mt-2 flex justify-between text-gray-500 text-sm">
+                        <span>{{ post.likes }} Likes</span>
+                        <span>{{ post.comments }} Comments</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+       const profilePic = document.getElementById('profilePic');
+    const profileOptions = document.getElementById('profileOptions');
+    const profilePicInput = document.getElementById('profilePicInput');
+    const viewImage = document.getElementById('viewImage');
+    const uploadImage = document.getElementById('uploadImage');
+    const imageModal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const closeModal = document.getElementById('closeModal');
+
+    // Show menu on click
+    profilePic.addEventListener('click', () => {
+        profileOptions.classList.toggle('hidden');
+    });
+
+    // View profile image
+    viewImage.addEventListener('click', () => {
+        modalImage.src = profilePic.src;
+        imageModal.classList.remove('hidden');
+        profileOptions.classList.add('hidden');
+    });
+
+    // Close modal
+    closeModal.addEventListener('click', () => {
+        imageModal.classList.add('hidden');
+    });
+
+    // Upload new image
+    uploadImage.addEventListener('click', () => {
+        profilePicInput.click();
+        profileOptions.classList.add('hidden');
+    });
+
+    // Upload and update profile image
+    profilePicInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('profile_picture', file);
+
+            fetch("{% url 'upload-profile-picture' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.image_url) {
+                    profilePic.src = data.image_url;
+                } else {
+                    alert("Failed to upload image");
+                }
+            })
+            .catch(error => console.error("Error uploading image:", error));
+        }
+    });
+
+    // Hide menu when clicking outside
+    document.addEventListener('click', (event) => {
+        if (!profilePic.contains(event.target) && !profileOptions.contains(event.target)) {
+            profileOptions.classList.add('hidden');
+        }
+    });
+
+    </script>
+{% endblock %}

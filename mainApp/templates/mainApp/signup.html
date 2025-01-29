@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Konnekt</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50">
+{% extends "base.html" %}
+{% load static %}
+{% block navbar %}{% endblock %}
+{% block content %}
   <!-- Main Container -->
   <div class="min-h-screen flex items-center justify-center p-4">
     <!-- Card -->
@@ -20,23 +15,46 @@
 
       <!-- Form Section -->
       <div class="w-full md:w-1/2 p-8">
+
+        <!-- Display Django messages -->
+        {% if messages %}
+        <div class="messages">
+        {% for message in messages %}
+                    <div class="alert 
+                        {% if message.tags == 'success' %}
+                            bg-green-500 text-white
+                        {% elif message.tags == 'error' %}
+                            bg-red-500 text-white
+                        {% else %}
+                            bg-gray-500 text-white
+                        {% endif %}
+                        px-4 py-2 rounded-md mb-2">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <h2 class="text-2xl font-bold text-gray-800 text-center">Create Your Account</h2>
         <p class="text-sm text-gray-500 text-center mt-2">Join our community today</p>
 
         <!-- Form -->
-        <form class="mt-6 space-y-4">
+        <form method="POST" class="mt-6 space-y-4">
+          {% csrf_token %}
           <!-- Name Fields -->
           <div class="flex gap-4">
             <input
               type="text"
               placeholder="First Name"
-              class="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              name="first_name"
+              class="w-1/2 px-4 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:ring-blue-500 focus:border-blue-500"
               required
             />
             <input
               type="text"
               placeholder="Surname"
-              class="w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              name="surname"
+              class="w-1/2 px-4 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
@@ -46,21 +64,24 @@
             <label class="text-sm text-gray-500">Date of Birth</label>
             <div class="flex gap-2">
               <select
-                class="w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                name="day"
+                class="w-1/3 px-4 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:ring-blue-500 focus:border-blue-500"
                 required
               >
                 <option value="" disabled selected>Day</option>
                 <!-- Populate with JavaScript -->
               </select>
               <select
-                class="w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                name="month"
+                class="w-1/3 px-4 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:ring-blue-500 focus:border-blue-500"
                 required
               >
                 <option value="" disabled selected>Month</option>
                 <!-- Populate with JavaScript -->
               </select>
               <select
-                class="w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                name="year"
+                class="w-1/3 px-4 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:ring-blue-500 focus:border-blue-500"
                 required
               >
                 <option value="" disabled selected>Year</option>
@@ -75,18 +96,18 @@
             <div class="grid grid-cols-3 gap-2">
               <!-- Male Option -->
               <label class="flex items-center justify-between p-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
-                <span class="text-gray-700 peer-checked:font-semibold">Male</span>
-                <input type="radio" name="gender" value="Male" required />
+                <span class="text-gray-700 text-sm peer-checked:font-semibold">Male</span>
+                <input type="radio" name="gender" value="Male" class="" required />
               </label>
               <!-- Female Option -->
               <label class="flex items-center justify-between p-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
-                <span class="text-gray-700 peer-checked:font-semibold">Female</span>
-                <input type="radio" name="gender" value="Female" required />
+                <span class="text-gray-700 text-sm peer-checked:font-semibold">Female</span>
+                <input type="radio" name="gender" value="Female" class="outline-none focus:ring-blue-500 focus:border-blue-500" required />
               </label>
               <!-- Other Option -->
               <label class="flex items-center justify-between p-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
-                <span class="text-gray-700 peer-checked:font-semibold">Other</span>
-                <input type="radio" name="gender" value="Other" required />
+                <span class="text-gray-700 text-sm peer-checked:font-semibold">Other</span>
+                <input type="radio" name="gender" value="Other" class="outline-none focus:ring-blue-500 focus:border-blue-500" required />
               </label>
             </div>
           </div>
@@ -95,7 +116,8 @@
           <input
             type="text"
             placeholder="Email or Phone Number"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            name="email_or_phone"
+            class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:ring-blue-500 focus:border-blue-500"
             required
           />
 
@@ -103,22 +125,22 @@
           <input
             type="password"
             placeholder="Password"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            name="password"
+            class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:ring-blue-500 focus:border-blue-500"
             required
           />
 
           <!-- Submit Button -->
           <button
             type="submit"
-            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-          >
+            class="w-full bg-blue-600 outline-none text-sm text-white py-2 rounded-lg hover:bg-blue-700 transition">
             Create Account
           </button>
         </form>
 
         <!-- Login Link -->
         <p class="text-sm text-gray-500 text-center mt-4">
-          Already have an account? <a href="{% url 'signin' %}" class="text-blue-500 hover:underline">Login</a>
+          Already have an account? <a href="{% url 'signin' %}" class="text-blue-500 hover:underline">Sign In</a>
         </p>
       </div>
     </div>
@@ -158,5 +180,5 @@
       yearSelect.appendChild(option);
     }
   </script>
-</body>
-</html>
+{% endblock %}
+

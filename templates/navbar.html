@@ -1,0 +1,114 @@
+{% load static %}
+<!-- Navbar -->
+<nav class="bg-white shadow-lg">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-between items-center">
+            <div class="flex space-x-7">
+                <!-- Website Logo -->
+                <div class="relative flex items-center">
+                    <!-- Logo Container -->
+                    <a href="/" class="flex items-center py-4 px-2">
+                        <!-- Purple Circle -->
+                        <div class="relative h-10 w-10 flex items-center justify-center bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full">
+                            <!-- K Letter Design -->
+                            <span class="text-white font-bold text-xl transform -rotate-12">K</span>
+                        </div>
+                        <!-- Text "KONNEKT" -->
+                        <span class="ml-1 font-semibold text-gray-700 text-2xl tracking-wide">ONNEKT</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Primary Navbar items - Centered -->
+            <div class="hidden md:block flex justify-center space-x-14 md:flex items-center w-full">
+                <a href="/" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">
+                    <i class='bx bx-home text-2xl'></i>
+                </a>
+                <a href="#" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">
+                    <i class='bx bx-group text-2xl'></i>                        
+                </a>
+                <a href="#" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">
+                    <i class='bx bx-chat text-2xl'></i>                        
+                </a>
+                <a href="#" class="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300">
+                    <i class='bx bx-bell text-2xl'></i>
+                </a>
+            </div>
+
+            <!-- Secondary Navbar items -->
+            <div class="hidden md:flex items-center space-x-3">
+                <!-- Profile Icon with Dropdown -->
+                <div class="relative">
+                    <!-- Profile Icon -->
+                    {% comment %} <button id="profileDropdownButton" class="flex items-center border border-2 border-purple-600 h-10 w-10 rounded-full focus:outline-none">
+                        <img src="{% static 'mainApp/images/p_img.jpg' %}" alt="Profile" class="object-contain rounded-full">
+                    </button> {% endcomment %}
+                    <button id="profileDropdownButton" class="flex items-center border border-2 border-purple-600 h-8 w-8 rounded-full focus:outline-none">
+                        {% if request.user.is_authenticated and profile_pic %}
+                            <img src="{{ profile_pic }}" alt="Profile" class="h-8 w-8 object-cover rounded-full">
+                        {% else %}
+                            <img src="{% static 'mainApp/images/default.png' %}" alt="Profile" class="object-contain rounded-full">
+                        {% endif %}
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg hidden">
+                        <a href="{% url 'profile' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Settings</a>
+                        <a href="{% url 'logout_view' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign Out</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden flex items-center">
+                <button class="outline-none mobile-menu-button">
+                    <svg class="w-6 h-6 text-gray-500 hover:text-green-500"
+                         x-show="!showMenu"
+                         fill="none"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         stroke-width="2"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div class="hidden mobile-menu">
+        <ul class="">
+            <li><a href="{% url 'profile' %}" class="block text-sm px-2 py-4 hover:bg-green-500 transition duration-300">Profile</a></li>
+            <li><a href="#" class="block text-sm px-2 py-4 hover:bg-green-500 transition duration-300">Friends</a></li>
+            <li><a href="#" class="block text-sm px-2 py-4 hover:bg-green-500 transition duration-300">Chat</a></li>
+            <li><a href="#" class="block text-sm px-2 py-4 hover:bg-green-500 transition duration-300">Notifications</a></li>
+            <li><a href="{% url 'logout_view' %}" class="block text-sm px-2 py-4 hover:bg-green-500 transition duration-300">Sign out</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- JavaScript for Mobile Menu -->
+<script>
+    const btn = document.querySelector("button.mobile-menu-button");
+    const menu = document.querySelector(".mobile-menu");
+
+    btn.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+    });
+
+    document.getElementById('profileDropdownButton').addEventListener('click', function() {
+        var dropdown = document.getElementById('profileDropdown');
+        dropdown.classList.toggle('hidden');
+    });
+
+    // Close the dropdown if clicked outside
+    window.addEventListener('click', function(event) {
+        var dropdown = document.getElementById('profileDropdown');
+        var button = document.getElementById('profileDropdownButton');
+        if (event.target !== button && !button.contains(event.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+</script>

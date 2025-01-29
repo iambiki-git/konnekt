@@ -14,6 +14,8 @@ class UserProfile(models.Model):
     dob = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=150, choices=GENDER_CHOICES, blank=True, null=True)
     phone = models.CharField(max_length=150, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', default='default.jpg')
+
 
     def __str__(self):
         return self.user.first_name
