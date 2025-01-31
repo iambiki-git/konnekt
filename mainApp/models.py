@@ -12,9 +12,9 @@ class UserProfile(models.Model):
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     dob = models.DateField(blank=True, null=True)
-    gender = models.CharField(max_length=150, choices=GENDER_CHOICES, blank=True, null=True)
-    phone = models.CharField(max_length=150, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', default='default.jpg')
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', default='profile_pics/default.jpg')
 
 
     def __str__(self):
