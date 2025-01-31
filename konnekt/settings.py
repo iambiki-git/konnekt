@@ -28,6 +28,7 @@ INSTALLED_APPS = [
 
     #Apps
     'mainApp',
+    'posts',
 
 ]
 
